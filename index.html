@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flor Amarilla con Tallo y Mensaje</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #ffe4e1; /* Color de fondo más acorde, rosa suave */
+        flex-direction: column;
+        margin: 0;
+      }
+
+      h1 {
+        font-family: "Arial", sans-serif;
+        font-size: 2em;
+        color: #ff69b4; /* Color rosa fuerte */
+        margin-bottom: 20px;
+        opacity: 0;
+        transition: opacity 1s ease-in-out; /* Efecto suave al aparecer */
+      }
+
+      canvas {
+        border: 1px solid #000;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="mensaje">Te amo mucho</h1>
+    <canvas id="florCanvas" width="400" height="400"></canvas>
+
+    <script>
+      const canvas = document.getElementById("florCanvas");
+      const ctx = canvas.getContext("2d");
+      const mensaje = document.getElementById("mensaje");
+
+      const centroX = canvas.width / 2;
+      const centroY = canvas.height / 2 - 50; // Posicionar la flor un poco más arriba para hacer espacio para el tallo
+      const radioCentro = 30;
+      const radioPetalo = 50;
+      const numPetalos = 8;
+      let petalosDibujados = 0;
+
+      // Función para dibujar un pétalo
+      function dibujarPetalo(angulo) {
+        const petaloX =
+          centroX + Math.cos(angulo) * (radioCentro + radioPetalo / 2);
+        const petaloY =
+          centroY + Math.sin(angulo) * (radioCentro + radioPetalo / 2);
+
+        ctx.beginPath();
+        ctx.arc(petaloX, petaloY, radioPetalo, 0, Math.PI * 2);
+        ctx.fillStyle = "#FFA500"; // Pétalos de color naranja
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      // Función para dibujar el centro de la flor
+      function dibujarCentro() {
+        ctx.beginPath();
+        ctx.arc(centroX, centroY, radioCentro, 0, Math.PI * 2);
+        ctx.fillStyle = "#FFD700"; // Amarillo más fuerte
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      // Función para dibujar el tallo de la flor
+      function dibujarTallo() {
+        ctx.beginPath();
+        ctx.moveTo(centroX, centroY + radioCentro); // Parte inferior del centro de la flor
+        ctx.lineTo(centroX, canvas.height - 50); // Dibujar hacia abajo
+        ctx.lineWidth = 8; // Grosor del tallo
+        ctx.strokeStyle = "green"; // Color verde para el tallo
+        ctx.stroke();
+        ctx.closePath();
+      }
+
+      // Mostrar el mensaje al terminar de dibujar la flor
+      function mostrarMensaje() {
+        mensaje.style.opacity = 1; // Hace que el texto sea visible con una transición suave
+      }
+
+      // Animación de la flor
+      function animarFlor() {
+        dibujarTallo(); // Dibuja el tallo primero
+
+        const intervalo = setInterval(() => {
+          if (petalosDibujados >= numPetalos) {
+            clearInterval(intervalo);
+            dibujarCentro(); // Al final, dibujar el centro amarillo
+            setTimeout(mostrarMensaje, 1000); // Mostrar el mensaje después de 1 segundo
+          } else {
+            const angulo = (petalosDibujados * Math.PI * 2) / numPetalos;
+            dibujarPetalo(angulo);
+            petalosDibujados++;
+          }
+        }, 500); // Dibuja un pétalo cada 500ms
+      }
+
+      // Iniciar la animación de la flor
+      animarFlor();
+    </script>
+  </body>
+</html>
